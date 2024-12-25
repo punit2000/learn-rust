@@ -1,4 +1,4 @@
-use std::result;
+use std::{result, string};
 
 fn main() {
     let s = "Hello World"; // main function is the owner
@@ -28,14 +28,24 @@ fn main() {
     let result = add(num);
     let name = String::from("Punit Savlesha");
     let s = gives_ownership();
-    let s = takes_and_gives_back(s);
+    let mut s = takes_and_gives_back(s);
     takes_ownership(name);
     println!("S is {s}");
     println!("Num is {num} and result is {result}");
 
-    let (s1, len) = calculate_len(s);
-    println!("The len of {s1} is {len}");
+    let len = calculate_len(&mut s); //called as borrowing i.e. referencing 
+    println!("The len of {s} is {len}");
     //println!("Value of name is  {name} ") owner is takes_ownership functions
+
+    //slices
+    let mut str = String::from("Hello World");
+    let res = find_first_word(&str);
+
+    //let hello = &str[..5];
+    //let world = &str[6..];
+    //str.clear();
+    println!("String is {str} and Result is {}", res.len());
+
 }
 
 fn takes_ownership(s: String) {
@@ -56,7 +66,19 @@ fn add(x: i32) -> i32 {
     x + 10
 }
 
-fn calculate_len(s: String) -> (String,usize) {
-    let result = s.len();
-    (s,result)
+fn calculate_len(s: &mut String) -> usize {
+    s.push_str("World"); 
+    let result = s.len(); 
+    result
+}
+
+fn find_first_word(input: &str) -> &str {
+    let s = input.as_bytes();
+    for (i, &item) in s.iter().enumerate() {
+        if item == b' ' {
+            return &input[..i];
+        }
+    }
+
+    &input[..]
 }
